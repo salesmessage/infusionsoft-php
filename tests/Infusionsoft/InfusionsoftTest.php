@@ -4,9 +4,10 @@ namespace Infusionsoft;
 
 use Infusionsoft\Http\CurlClient;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
-class InfusionsoftTest extends \PHPUnit_Framework_TestCase
+class InfusionsoftTest extends TestCase
 {
 
     /**
@@ -14,7 +15,7 @@ class InfusionsoftTest extends \PHPUnit_Framework_TestCase
      */
     protected $ifs;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->ifs = new Infusionsoft(array(
             'clientId'     => 'foo',
@@ -37,8 +38,10 @@ class InfusionsoftTest extends \PHPUnit_Framework_TestCase
 
     public function testGetAuthorizationUrl()
     {
-        $this->assertEquals('https://signin.infusionsoft.com/app/oauth/authorize?client_id=foo&redirect_uri=http%3A%2F%2Fexample.com%2F&response_type=code&scope=full',
-            $this->ifs->getAuthorizationUrl());
+        $this->assertEquals(
+            'https://signin.infusionsoft.com/app/oauth/authorize?client_id=foo&redirect_uri=http%3A%2F%2Fexample.com%2F&response_type=code&scope=full',
+            $this->ifs->getAuthorizationUrl()
+        );
     }
 
     /**
@@ -48,8 +51,10 @@ class InfusionsoftTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAuthorizationUrlWithState($state)
     {
-        $this->assertEquals('https://signin.infusionsoft.com/app/oauth/authorize?client_id=foo&redirect_uri=http%3A%2F%2Fexample.com%2F&response_type=code&scope=full&state=' . $state,
-            $this->ifs->getAuthorizationUrl((string)$state));
+        $this->assertEquals(
+            'https://signin.infusionsoft.com/app/oauth/authorize?client_id=foo&redirect_uri=http%3A%2F%2Fexample.com%2F&response_type=code&scope=full&state=' . $state,
+            $this->ifs->getAuthorizationUrl((string)$state)
+        );
     }
 
     public static function dataStates()
@@ -125,7 +130,6 @@ class InfusionsoftTest extends \PHPUnit_Framework_TestCase
 
     public function testSettingHttpLogAdapter()
     {
-
         $this->ifs->setHttpLogAdapter(new NullLogger());
         $this->assertInstanceOf('Psr\Log\NullLogger', $this->ifs->getHttpLogAdapter());
     }

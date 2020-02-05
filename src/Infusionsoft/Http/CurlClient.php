@@ -14,25 +14,12 @@ class CurlClient implements ClientInterface
      */
     public function getXmlRpcTransport()
     {
-
         $options = [CURLOPT_TIMEOUT => 60];
 
-        return new HttpAdapterTransport(new DiactorosMessageFactory(),
-            new \Http\Client\Curl\Client(new DiactorosMessageFactory(), new DiactorosStreamFactory(), $options));
-    }
-
-    /**
-     * @param string $uri
-     * @param string $payload
-     *
-     * @return string
-     */
-    public function send($uri, $payload)
-    {
-        curl_setopt($this->handle, CURLOPT_CAINFO,
-            __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'cacert.pem');
-
-        return parent::send($uri, $payload);
+        return new HttpAdapterTransport(
+            new DiactorosMessageFactory(),
+            new \Http\Client\Curl\Client(new DiactorosMessageFactory(), new DiactorosStreamFactory(), $options)
+        );
     }
 
     /**
@@ -51,7 +38,7 @@ class CurlClient implements ClientInterface
         $body    = $options['body'];
 
         $processed_headers = array();
-        if ( ! empty($headers)) {
+        if (! empty($headers)) {
             foreach ($headers as $key => $value) {
                 $processed_headers[] = $key . ': ' . $value;
             }
@@ -63,8 +50,11 @@ class CurlClient implements ClientInterface
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HEADER, false);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $processed_headers);
-        curl_setopt($ch, CURLOPT_CAINFO,
-            __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'cacert.pem');
+        curl_setopt(
+            $ch,
+            CURLOPT_CAINFO,
+            __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'cacert.pem'
+        );
 
         if (strtolower($method) === 'post') {
             curl_setopt($ch, CURLOPT_POST, true);
@@ -98,5 +88,4 @@ class CurlClient implements ClientInterface
 
         return $response;
     }
-
 }
